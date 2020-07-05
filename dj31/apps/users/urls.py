@@ -8,6 +8,10 @@
 from django.urls import path
 from . import views
 
+app_name = 'users'
+
 urlpatterns = [
     path('',views.demo),
+    path('register/',views.register,name = 'register'),
+    path('image_code/<uuid:img_id>/',views.image_code,name = 'image_code'),
 ]

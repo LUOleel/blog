@@ -17,7 +17,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
+import os,sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,6 +31,7 @@ SECRET_KEY = '+e!=-w!x*t7yb&k(h-=v$-mci9w+2ikb52^(-do9tvx7nlwq+q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+sys.path.insert(0,os.path.join(BASE_DIR,'apps'))#sys.path是个列表，insert是列表的函数，0是下标，即优先被索引
 
 ALLOWED_HOSTS = ['*']
 
@@ -77,6 +78,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dj31.wsgi.application'
 
+AUTH_USER_MODEL = 'users.Users'#因为这个是在全局settings中声明了模型类的模板是auth的
+#因此，即使自己重写了auth模型类，但是不重写全局settings的设定，系统还是会不承认，改为应用名.改写的模型类名
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -95,6 +99,14 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    #配置redis图形验证码
+    "verify_code": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -187,3 +199,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),	# 用于存放静态文件
 ]
+
+# from django.conf.global_settings import
